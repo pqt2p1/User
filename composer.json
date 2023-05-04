@@ -12,7 +12,9 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable":true,
-    "require": {},
+    "require": {
+        "laravel/sanctum": "^2.15"
+    },
     "require-dev": {
         "symfony/thanks": "^1.0",
         "phpunit/phpunit": "^7.4@dev",

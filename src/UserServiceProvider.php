@@ -19,8 +19,8 @@ class UserServiceProvider extends ServiceProvider
         $this->publishConfig();
 
         // $this->loadViewsFrom(__DIR__.'/resources/views', 'user');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->registerRoutes();
+        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        $this->registerRoutes();
     }
 
     /**
