@@ -3,8 +3,9 @@
 namespace Pqt2p1\User\Http\Controllers\Api;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Events\PasswordReset;
+use Pqt2p1\User\Encryption;
 use Illuminate\Http\Request;
 use Pqt2p1\User\Models\User;
 use Illuminate\Routing\Controller;
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use Pqt2p1\User\Notifications\ResetPassword;
 
 class AuthController extends Controller
 {
@@ -96,7 +100,8 @@ class AuthController extends Controller
     {
     }
 
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         $validatedData = Validator::make($request->all(), [
             'current_password' => 'required',
             'new_password' => 'required|min:8|confirmed',
@@ -132,6 +137,12 @@ class AuthController extends Controller
                 'error' => 1,
                 'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
             ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 1, 'mes' => __('The selected email is invalid')]);
         }
 
         $status = Password::sendResetLink(
@@ -172,11 +183,13 @@ class AuthController extends Controller
         if ($status == Password::PASSWORD_RESET) {
             return response()->json([
                 'error' => 0,
-                'mes' => 'Password reset successully']);
+                'mes' => 'Password reset success'
+            ]);;
         }
 
         return response()->json([
             'error' => 1,
-            'mes' => 'Error happenned when reseting your password']);
+            'mes' => 'Error happenned when reseting your password'
+        ]);
     }
 }

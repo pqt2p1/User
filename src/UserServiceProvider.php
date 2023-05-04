@@ -4,6 +4,7 @@ namespace Pqt2p1\User;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,10 @@ class UserServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        ResetPassword::createUrlUsing(function ($notifiable, $token) {
+            return "http://localhost:8000/password/reset-password/"."?token=$token&email={$notifiable->getEmailForPasswordReset()}";
+        });
+        
         $this->mergeConfigFrom(__DIR__ . '/../config/User.php', 'user');
 
         $this->publishConfig();
