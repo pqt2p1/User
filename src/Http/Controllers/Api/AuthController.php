@@ -9,6 +9,7 @@ use Pqt2p1\User\Encryption;
 use Illuminate\Http\Request;
 use Pqt2p1\User\Models\User;
 use Illuminate\Routing\Controller;
+use Pqt2p1\User\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -16,53 +17,36 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use Pqt2p1\User\Http\Requests\ChangePasswordUserRequest;
+use Pqt2p1\User\Http\Requests\ForgotPasswordUserRequest;
 use Pqt2p1\User\Notifications\ResetPassword;
+use Pqt2p1\User\Http\Requests\LoginUserRequest;
+use Pqt2p1\User\Http\Requests\RegisterUserRequest;
+use Pqt2p1\User\Http\Requests\UpdateProfileUserRequest;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
-        $validatedData = Validator::make($request->all(), [
-            'email' => 'required|email|max:255',
-            'password' => 'required|max:255',
-        ]);
-
-        if ($validatedData->fails()) {
-            return response()->json([
-                'error' => 1,
-                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
-            ], 422);
-        }
-
+        $request->validated();
+        
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 1, 'mes' => __('Bad cred...')]);
+            return ApiResponse::errorResponse('Bad cred...');
         }
 
-        $data = response()->json(['error' => 0, 'mes' => __('Login Success'), 'result' => [
+        $data = [
             'user' => $user,
             'token' => $user->createToken($user->email)->plainTextToken,
-        ]]);
+        ];
 
-
-        return $data;
+        return ApiResponse::successResponse('Login Success', $data);
     }
 
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $validatedData = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|confirmed|max:255',
-        ]);
-
-        if ($validatedData->fails()) {
-            return response()->json([
-                'error' => 1,
-                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
-            ], 422);
-        }
+        $request->validated();
 
         $user = new User;
         $user->name = $request->name;
@@ -74,40 +58,29 @@ class AuthController extends Controller
 
         event(new Registered($user));
 
-        $data = response()->json(['error' => 0, 'mes' => __('Created Successfully'), 'result' => [
+        $data = [
             'user' => $user,
             'token' => $token,
-        ]]);
+        ];
 
-        return $data;
+        return ApiResponse::successResponse('Created Successfully', $data);
     }
 
     public function logout(Request $request)
     {
         Auth::user()->currentAccessToken()->delete();
-
-        return response()->json(['error' => 0, 'mes' => __('Logout Successfully')]);
+        return ApiResponse::successResponse('Logout Success');
     }
 
     public function getProfile(Request $request)
     {
         $user = Auth::user();
-
-        return response()->json(['error' => 0, 'mes' => __('Get Profile Successully'), 'result' => $user]);
+        return ApiResponse::successResponse('Get profile success', $user);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileUserRequest $request)
     {
-        $validatedData = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-        ]);
-
-        if ($validatedData->fails()) {
-            return response()->json([
-                'error' => 1,
-                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
-            ], 422);
-        }
+        $request->validated();
 
         $user = Auth::user();
         $user->name = $request->name;
@@ -115,22 +88,11 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json(['error' => 0, 'mes' => __('Update Successfully')]);
-
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(ChangePasswordUserRequest $request)
     {
-        $validatedData = Validator::make($request->all(), [
-            'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
-        ]);
-
-        if ($validatedData->fails()) {
-            return response()->json([
-                'error' => 1,
-                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
-            ], 422);
-        }
+        $request->validated();
 
         $user = Auth::user();
 
@@ -144,19 +106,10 @@ class AuthController extends Controller
         return response()->json(['error' => 0, 'mes' => __('Password has been changed')]);
     }
 
-    public function forgotPassword(Request $request)
+    public function forgotPassword(ForgotPasswordUserRequest $request)
     {
-        $validatedData = Validator::make($request->all(), [
-            'email' => 'required|email|max:255',
-        ]);
-
-        if ($validatedData->fails()) {
-            return response()->json([
-                'error' => 1,
-                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
-            ], 422);
-        }
-
+        $request->validated(); 
+        
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
