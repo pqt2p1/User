@@ -4,7 +4,7 @@ namespace Pqt2p1\User\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordUserRequest extends FormRequest
+class ResetPasswordUserRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class ResetPasswordUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class ResetPasswordUserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'token' => 'required',
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:8|confirmed|max:255',
         ];
     }
 }
