@@ -98,6 +98,24 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $validatedData = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'error' => 1,
+                'mes' => 'Invalid request data: ' . $validatedData->errors()->first(),
+            ], 422);
+        }
+
+        $user = Auth::user();
+        $user->name = $request->name;
+
+        $user->save();
+
+        return response()->json(['error' => 0, 'mes' => __('Update Successfully')]);
+
     }
 
     public function changePassword(Request $request)
