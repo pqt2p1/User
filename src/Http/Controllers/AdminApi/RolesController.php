@@ -1,20 +1,26 @@
 <?php
 
-namespace Pqt2p1\User\Http\Controllers;
+namespace Pqt2p1\User\Http\Controllers\AdminApi;
 
-use App\Pqt2p1\User\Permissions;
 use Illuminate\Http\Request;
+use Pqt2p1\User\Models\Roles;
+use Illuminate\Routing\Controller;
+use Pqt2p1\User\Http\Requests\RoleRequest\IndexRoleRequest;
+use Pqt2p1\User\Http\Requests\RoleRequest\StoreRoleRequest;
+use Pqt2p1\User\Http\Requests\RoleRequest\CreateRoleRequest;
 
-class PermissionsController extends Controller
+class RolesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexRoleRequest $request)
     {
-        //
+        $request->validated();
+
+        // $roles = Role::with('permissions');
     }
 
     /**
@@ -22,9 +28,9 @@ class PermissionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(CreateRoleRequest $request)
     {
-        //
+        $request->validated();
     }
 
     /**
@@ -33,7 +39,7 @@ class PermissionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
         //
     }
@@ -41,10 +47,10 @@ class PermissionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Pqt2p1\User\Permissions  $permissions
+     * @param  \App\Pqt2p1\User\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function show(Permissions $permissions)
+    public function show(Roles $roles)
     {
         //
     }
@@ -52,10 +58,10 @@ class PermissionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Pqt2p1\User\Permissions  $permissions
+     * @param  \App\Pqt2p1\User\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function edit(Permissions $permissions)
+    public function edit(Roles $roles)
     {
         //
     }
@@ -64,10 +70,10 @@ class PermissionsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pqt2p1\User\Permissions  $permissions
+     * @param  \App\Pqt2p1\User\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permissions $permissions)
+    public function update(Request $request, Roles $roles)
     {
         //
     }
@@ -75,10 +81,10 @@ class PermissionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Pqt2p1\User\Permissions  $permissions
+     * @param  \App\Pqt2p1\User\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Permissions $permissions)
+    public function destroy(Roles $roles)
     {
         //
     }

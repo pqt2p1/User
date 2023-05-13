@@ -1,11 +1,12 @@
 <?php
 
-namespace Pqt2p1\User\Http\Controllers;
+namespace Pqt2p1\User\Http\Controllers\AdminApi;
 
-use App\Pqt2p1\User\Roles;
 use Illuminate\Http\Request;
+use App\Pqt2p1\User\Permissions;
+use Illuminate\Routing\Controller;
 
-class RolesController extends Controller
+class PermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +42,10 @@ class RolesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Pqt2p1\User\Roles  $roles
+     * @param  \App\Pqt2p1\User\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function show(Roles $roles)
+    public function show(Permissions $permissions)
     {
         //
     }
@@ -52,10 +53,10 @@ class RolesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Pqt2p1\User\Roles  $roles
+     * @param  \App\Pqt2p1\User\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function edit(Roles $roles)
+    public function edit(Permissions $permissions)
     {
         //
     }
@@ -64,10 +65,10 @@ class RolesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pqt2p1\User\Roles  $roles
+     * @param  \App\Pqt2p1\User\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Roles $roles)
+    public function update(Request $request, Permissions $permissions)
     {
         //
     }
@@ -75,10 +76,10 @@ class RolesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Pqt2p1\User\Roles  $roles
+     * @param  \App\Pqt2p1\User\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Roles $roles)
+    public function destroy(Permissions $permissions)
     {
         //
     }
